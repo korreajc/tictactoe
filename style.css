@@ -1,0 +1,29 @@
+body{
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-direction: column;
+}
+
+#mainBoard{
+    width: 500px;
+    height: 500px;
+    display: grid;
+    justify-items: center;
+    align-items: center;    
+    grid-template-columns: repeat(3, 1fr);
+    grid-template-rows: repeat(3, 1fr);
+    background-color: black;
+    grid-gap: 0px;
+}
+
+.gridCell{
+    background-color: white;
+    width: 160px;
+    height: 160px;
+    font-size: large;
+    color: black;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
