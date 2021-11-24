@@ -27,3 +27,17 @@ body{
     align-items: center;
     justify-content: center;
 }
+
+#win{
+    width: 100px;
+    height: 100px;
+    background-color: black;
+    display: flex;
+}
+
+#resetButton{
+    width: 100px;
+    height: 100px;
+    display: flex;
+}
+

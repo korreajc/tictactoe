@@ -2,12 +2,56 @@ let gameBoard = (function(){
     let gbArray = ["", "", "", "", "", "", "", "", ""]; 
     let cells = document.getElementsByClassName("gridCell");
  
+    let winCombinations = [{
+            first: 0, 
+            second: 1, 
+            third: 2
+        },
+        {
+            first: 0, 
+            second: 3, 
+            third: 6
+        },
+        {
+            first: 0, 
+            second: 4, 
+            third: 8
+        },
+        {
+            first: 6, 
+            second: 7, 
+            third: 8
+        },
+        {
+            first: 2, 
+            second: 5, 
+            third: 8
+        },
+        {
+            first: 1, 
+            second: 4, 
+            third: 7
+        },
+        {
+            first: 3, 
+            second: 4, 
+            third: 5
+        },
+        {
+            first: 6, 
+            second: 4, 
+            third: 2
+        }
+    ]
+    
 
     function setCellIndex(){
         for(let i = 0; i < cells.length; i++){
             cells[i].setAttribute("data-index", i)
         }
     }
+
+    
     return{
         populateIndex: function(){
             for(let i = 0; i < cells.length; i++){
@@ -38,6 +82,30 @@ let gameBoard = (function(){
                 changed = true;
             }
             return changed;
+        },
+
+        check: function(){
+                let count = 0;
+                for(let i = 0; i < winCombinations.length; i++){
+                    let firstIndex = gbArray[winCombinations[i].first]
+                    let secondIndex = gbArray[winCombinations[i].second]
+                    let thirdIndex = gbArray[winCombinations[i].third]
+                    if(firstIndex == "X" && secondIndex == "X" && thirdIndex == "X"){
+                        i == winCombinations.length
+                        return true;
+                    }else if(firstIndex == "O" && secondIndex == "O" && thirdIndex == "O"){
+                        i == winCombinations.length
+                        return true;
+                    }
+                }
+        }, 
+
+        again: function(){
+            const newDiv = document.getElementById("buttonsDiv")
+            const resetButton = document.createElement("button")
+            resetButton.innerHTML = "PLAY AGAIN"
+            resetButton.setAttribute("id", "resetButton")
+            newDiv.appendChild(resetButton)
         }
     }  
 })();
@@ -49,9 +117,10 @@ const playerCreator = name => {
 
 const playGame = (() => {
     const playButton = document.getElementById("start");
-    const resetButton = document.getElementById("reset");
     const player = playerCreator("Player");
     const comp = playerCreator("Computer")
+    
+    
 
     let turnCount = 0;    
     playButton.addEventListener("click", function(){
@@ -71,12 +140,21 @@ const playGame = (() => {
                     turnCount++;
                 }
             }
+            let checkWin = gameBoard.check();
+            if(checkWin){
+                gameBoard.again();
+            }
         })
     });
 
-    resetButton.addEventListener("click", function(){
-        gameBoard.resetBoard();
-    });
+    document.addEventListener("click", function(e){
+        if(e.target && e.target.id == "resetButton"){
+            gameBoard.resetBoard();
+            let resetButton = document.getElementById("resetButton")
+            resetButton.remove();
+            turnCount = 0;
+        }
+    })
 
 
 
