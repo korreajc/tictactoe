@@ -47,6 +47,16 @@ let gameBoard = (function(){
         console.log(gbArray);
     }
 
+    function checkFill(){
+        let fillCount = 0;
+        for(let i = 0; i < gbArray.length; i++){
+            if(gbArray[i] == "X" || gbArray[i] == "O"){
+                fillCount++
+            }
+        }
+        return fillCount
+    }
+
     function resetArray(){
         for(let i = 0; i < gbArray.length; i++){
             gbArray[i] = "";
@@ -100,6 +110,7 @@ let gameBoard = (function(){
         resetArray,
         clickEnabled,
         print,
+        checkFill,
     }  
 })();
 
@@ -135,14 +146,16 @@ const playGame = (function(){
     }
 
     function displayTie(){
-        const div = document.getElementById("resultsSection")
-        const element = document.createElement("div") 
-        element.classList.add("resultClass")
-        element.setAttribute("id",  "result")
-        div.appendChild(element)
-        element.innerHTML = "TIE!"
-
-
+        let tieCheck = gameBoard.checkFill();
+        if(tieCheck == 9){
+            const div = document.getElementById("resultsSection")
+            const element = document.createElement("div") 
+            element.classList.add("resultClass")
+            element.setAttribute("id",  "result")
+            div.appendChild(element)
+            element.innerHTML = "TIE!"
+            playAgain();
+        }
     }
 
     function restart(){
@@ -177,6 +190,8 @@ const playGame = (function(){
                 displayWinner(turn)
                 gameBoard.stopClicking(); 
                 playAgain();
+            }else{
+                    displayTie();
             }
             gameBoard.print();
 
