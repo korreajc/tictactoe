@@ -65,6 +65,7 @@ let gameBoard = (function(){
                 gbArray[i] = "";
             }
             this.populateIndex();
+            
         },
 
         changeCell: function(cellNumber, playerName){
@@ -106,6 +107,22 @@ let gameBoard = (function(){
             resetButton.innerHTML = "PLAY AGAIN"
             resetButton.setAttribute("id", "resetButton")
             newDiv.appendChild(resetButton)
+        },
+
+        tieCheck: function(){
+            let filledCount = 0;
+            let checkTie = false;
+            for(let i = 0; i < gbArray.length; i++){
+                if(gbArray[i] == "X" || gbArray[i] == "Y"){
+                    filledCount++;
+                }
+            }
+            let checkWin = gameBoard.check();
+            if(filledCount == 9 && checkWin == false){
+                checkTie = true;
+            }
+            console.log(checkTie);
+            return checkTie;
         }
     }  
 })();
@@ -120,11 +137,10 @@ const playGame = (() => {
     const player = playerCreator("Player");
     const comp = playerCreator("Computer")
     
-    
-
     let turnCount = 0;    
     playButton.addEventListener("click", function(){
         gameBoard.populateIndex();
+        playButton.remove();
         document.addEventListener("click", function(e){
             if(e.target && e.target.className == "gridCell"){
                 let changed = false;
@@ -141,8 +157,15 @@ const playGame = (() => {
                 }
             }
             let checkWin = gameBoard.check();
+            let tieCheck = gameBoard.tieCheck();
             if(checkWin){
                 gameBoard.again();
+            }
+
+            if(tieCheck){
+                gameBoard.again();
+                const changeResult = document.getElementById("result")
+                changeResult.innerHTML = "TIE"
             }
         })
     });
@@ -155,7 +178,4 @@ const playGame = (() => {
             turnCount = 0;
         }
     })
-
-
-
 })();
