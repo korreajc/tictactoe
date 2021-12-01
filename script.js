@@ -120,9 +120,7 @@ const playerCreator = (name, index) => {
 };
 
 const playGame = (function(){
-    const playButton = document.getElementById("start");
-    const player = playerCreator("Player", 1);
-    const comp = playerCreator("Computer", 2)
+    const playButton = document.getElementById("playBtn");
     let count = 0;
 
     function turnGenerator(){
@@ -137,9 +135,9 @@ const playGame = (function(){
         element.setAttribute("id",  "result")
         div.appendChild(element)
 
-        if(turn == 0){
+        if(turn%2 != 0){
             element.innerHTML = "Player One Wins"
-        }else if(turn == 1){
+        }else if(turn%2 == 0){
             element.innerHTML = "Player Two Wins"
 
         }
@@ -165,6 +163,7 @@ const playGame = (function(){
         playAgnBtn.remove();
         gameBoard.resetArray();
         gameBoard.clickEnabled();
+        count = 0;
 
     }
 
@@ -175,28 +174,46 @@ const playGame = (function(){
         element.classList.add("playAgain")
         element.setAttribute("id", "playAgain")
         resultSection.appendChild(element)
+    }
+
+    function enterNames(){
+        const playerOne = document.getElementById("p1")
+        const playerTwo = document.getElementById("p2")
+        var tempOne = window.prompt("Player One Name: ")
+        var tempTwo = window.prompt("Player Two Name: ")
+        const player = playerCreator(tempOne, 1);
+        const comp = playerCreator(tempTwo, 2)
+        playerOne.innerHTML = tempOne;
+        playerTwo.innerHTML = tempTwo;
 
     }
-    
-    document.addEventListener("click", function(e){
-        if(e.target && e.target.className == "gridCell"){
-            let cell = e.target
-            let cellIndex = cell.getAttribute('data-index')
-            let turn = turnGenerator();
-            gameBoard.modifyArrayValue(cellIndex, turn);
-            let check = gameBoard.check()
-            console.log(check)
-            if(check){
-                displayWinner(turn)
-                gameBoard.stopClicking(); 
-                playAgain();
-            }else{
-                    displayTie();
-            }
-            gameBoard.print();
 
-        }
+
+    playBtn.addEventListener("click", function(){
+        playButton.remove();
+        enterNames();
+        document.addEventListener("click", function(e){
+            if(e.target && e.target.className == "gridCell"){
+                let cell = e.target
+                let cellIndex = cell.getAttribute('data-index')
+                let turn = turnGenerator();
+                gameBoard.modifyArrayValue(cellIndex, turn);
+                let check = gameBoard.check()
+                console.log(check)
+                if(check){
+                    displayWinner(turn)
+                    gameBoard.stopClicking(); 
+                    playAgain();
+                }else{
+                    displayTie();
+                }
+                gameBoard.print();
+
+            }
+        })
+
     })
+
 
     document.addEventListener("click", function(e){
         if(e.target && e.target.className == "playAgain"){
